@@ -1,0 +1,209 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url("../images/ghibli_car.png");
+    background-size: cover;
+    background-position: center;
+    font-family: 'Audiowide', sans-serif;
+    color: white;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.3);
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    opacity: 0;
+    animation: fadeIn 1.2s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+.titulo-direccion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.titulo {
+    text-align: center;
+    font-size: 64px;
+    font-family: 'Audiowide', cursive;
+    color: #f4b942;
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7);
+    animation: zoomIn 1s ease-out;
+}
+
+.arrow {
+    font-size: 64px;
+    color: rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
+    filter: blur(0.5px);
+}
+
+.arrow.active {
+    color: #f1c40f;
+    transform: scale(1.5);
+    filter: drop-shadow(0 0 8px #f1c40f);
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+}
+
+@keyframes zoomIn {
+    0% {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0 40px;
+}
+
+.lado, .centro {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.centro {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+.bloque, .bloque.central {
+    background-color: rgba(255, 128, 64, 0.4);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    padding: 20px 30px;
+    border-radius: 12px;
+    text-align: center;
+    min-width: 150px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUp 0.8s ease-out forwards;
+}
+
+.lado .bloque:nth-child(1) { animation-delay: 0.4s; }
+.lado .bloque:nth-child(2) { animation-delay: 0.6s; }
+.centro .bloque.central:nth-child(1) { animation-delay: 0.5s; }
+.centro .bloque.central:nth-child(2) { animation-delay: 0.7s; }
+.centro .bloque.central:nth-child(3) { animation-delay: 0.9s; }
+.lado.derecho .bloque:nth-child(1) { animation-delay: 0.4s; }
+.lado.derecho .bloque:nth-child(2) { animation-delay: 0.6s; }
+
+@keyframes slideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h2 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    color: #fff;
+    font-family: 'Audiowide', sans-serif;
+    letter-spacing: 1px;
+}
+
+p {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffe;
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+/* ESTADO ACTIVO/INACTIVO */
+.status {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-top: 6px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+    transition: all 0.3s ease-in-out;
+}
+
+.status.active {
+    background-color: #2ecc71; /* verde */
+    color: #ffffff;
+    border: 1px solid #27ae60;
+}
+
+.status.inactive {
+    background-color: #e74c3c; /* rojo */
+    color: #ffffff;
+    border: 1px solid #c0392b;
+}
+
+.gamepad-status {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 14px;
+    color: #333;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-family: 'Orbitron', sans-serif;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    backdrop-filter: blur(3px);
+    letter-spacing: 0.5px;
+}
+
+.gamepad-indicator {
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: rgba(255, 128, 64, 0.4); /* fondo igual que .bloque */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    padding: 8px 12px;
+    border-radius: 12px;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+    font-family: 'Orbitron', sans-serif;
+}
+
+
+#gamepad-icon {
+    font-size: 22px;
+    color: #999;
+    transition: color 0.3s ease;
+}
+
+.battery-text-icon {
+    font-size: 25px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.5px;
+}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- === METADATOS Y RECURSOS === -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - Terry</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="overlay">
+
+        <!-- === ICONO DE MANDO EN ESQUINA === -->
+        <div id="gamepad-indicator" class="gamepad-indicator">
+            <i id="gamepad-icon" class="fas fa-gamepad"></i>
+            <span id="battery-text" class="battery-text-icon">--%</span>
+        </div>
+
+        <!-- === TÍTULO PRINCIPAL Y FLECHAS === -->
+        <div class="titulo-direccion">
+            <span id="arrow-left" class="arrow">⬅</span>
+            <h1 class="titulo">TERRY</h1>
+            <span id="arrow-right" class="arrow">➡</span>
+        </div>
+
+        <!-- === PANEL DE SENSORES Y MOTORES === -->
+        <div class="panel">
+            <!-- Lado izquierdo -->
+            <div class="lado izquierdo">
+                <div class="bloque">
+                    <h2>INFRARROJOS IZ</h2>
+                    <p id="ir_left_val">--</p>
+                    <p id="ir_left_status" class="status">--</p>
+                </div>
+                <div class="bloque">
+                    <h2>ULTRASONIDOS IZ</h2>
+                    <p id="us_left_val">--</p>
+                    <p id="us_left_status" class="status">--</p>
+                </div>
+            </div>
+
+            <!-- Centro -->
+            <div class="centro">
+                <div class="bloque central">
+                    <h2>% MOTOR IZQ</h2>
+                    <p id="motor_left">---</p>
+                </div>
+                <div class="bloque central">
+                    <h2>DIRECCIÓN</h2>
+                    <p id="direccion">---</p>
+                </div>
+                <div class="bloque central">
+                    <h2>% MOTOR DER</h2>
+                    <p id="motor_right">---</p>
+                </div>
+            </div>
+
+            <!-- Lado derecho -->
+            <div class="lado derecho">
+                <div class="bloque">
+                    <h2>INFRARROJOS DE</h2>
+                    <p id="ir_right_val">--</p>
+                    <p id="ir_right_status" class="status">--</p>
+                </div>
+                <div class="bloque">
+                    <h2>ULTRASONIDOS DE</h2>
+                    <p id="us_right_val">--</p>
+                    <p id="us_right_status" class="status">--</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- === JAVASCRIPT: ACTUALIZACIÓN DE PANEL Y MANDO === -->
+    <script>
+        function updatePanel() {
+            $.getJSON('/get_state', function(data) {
+                $('#ir_left_val').text(data.ir_left.toFixed(2));
+                $('#us_left_val').text(data.us_left.toFixed(2));
+                $('#ir_right_val').text(data.ir_right.toFixed(2));
+                $('#us_right_val').text(data.us_right.toFixed(2));
+
+                $('#ir_left_status')
+                    .text(data.ir_left_active ? 'ACTIVO' : 'INACTIVO')
+                    .removeClass('active inactive')
+                    .addClass(data.ir_left_active ? 'active' : 'inactive');
+
+                $('#us_left_status')
+                    .text(data.us_left_active ? 'ACTIVO' : 'INACTIVO')
+                    .removeClass('active inactive')
+                    .addClass(data.us_left_active ? 'active' : 'inactive');
+
+                $('#ir_right_status')
+                    .text(data.ir_right_active ? 'ACTIVO' : 'INACTIVO')
+                    .removeClass('active inactive')
+                    .addClass(data.ir_right_active ? 'active' : 'inactive');
+
+                $('#us_right_status')
+                    .text(data.us_right_active ? 'ACTIVO' : 'INACTIVO')
+                    .removeClass('active inactive')
+                    .addClass(data.us_right_active ? 'active' : 'inactive');
+
+                $('#motor_left').text(data.motor_left + '%');
+                $('#motor_right').text(data.motor_right + '%');
+                $('#direccion').text(data.direccion);
+
+                $('#arrow-left, #arrow-right').removeClass('active');
+                if (data.direccion === 'IZQUIERDA') {
+                    $('#arrow-left').addClass('active');
+                } else if (data.direccion === 'DERECHA') {
+                    $('#arrow-right').addClass('active');
+                } else if (data.direccion === 'RECTO') {
+                    $('#arrow-left, #arrow-right').addClass('active');
+                }
+            });
+        }
+
+        function updateGamepadStatus() {
+            $.getJSON('/get_gamepad_status', function(data) {
+                const connected = data.connected;
+                const battery = data.battery;
+
+                $('#gamepad-icon').css('color', connected ? '#4caf50' : '#f44336');
+                $('#battery-text').text(battery);
+            });
+        }
+
+        setInterval(updatePanel, 100);
+        setInterval(updateGamepadStatus, 5000);
+        updateGamepadStatus();
+    </script>
+</body>
+</html>
